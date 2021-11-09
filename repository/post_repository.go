@@ -29,7 +29,7 @@ type PostRepository interface {
 	FindAll() ([]*PostData, error)
 	FindById(id string) (*PostData, error)
 	FindByPagination(page int64, pageSize int64) ([]*PostData, error)
-	FindByCategoryPagination(categoryid string, page int, pageSize int) ([]*PostData, error)
+	FindByCategoryPagination(categoryid int, page int, pageSize int) ([]*PostData, error)
 	Create(data PostData) (bool, error)
 }
 
@@ -55,7 +55,7 @@ func (r *MongoRepository) Add(data PostData) (bool, error) {
 }
 
 // FindByPagination fetches all the API definitions available
-func (r *MongoRepository) FindByCategoryPagination(categoryid string, page int64, pageSize int64) ([]*PostData, error) {
+func (r *MongoRepository) FindByCategoryPagination(categoryid int64, page int64, pageSize int64) ([]*PostData, error) {
 	var result []*PostData
 
 	ctx, cancel := context.WithTimeout(context.Background(), mongoQueryTimeout)
@@ -66,7 +66,7 @@ func (r *MongoRepository) FindByCategoryPagination(categoryid string, page int64
 	options.SetSkip((page - 1) * pageSize)
 	options.SetLimit(pageSize)
 
-	cur, err := r.collection.Find(ctx, bson.M{"categoryid": categoryid}, options)
+	cur, err := r.collection.Find(ctx, bson.M{"categoryid": categoryid, "isactive": true}, options)
 	if err != nil {
 		return nil, err
 	}
@@ -95,7 +95,7 @@ func (r *MongoRepository) FindByPagination(page int64, pageSize int64) ([]*PostD
 	options.SetSkip((page - 1) * pageSize)
 	options.SetLimit(pageSize)
 
-	cur, err := r.collection.Find(ctx, bson.M{}, options)
+	cur, err := r.collection.Find(ctx, bson.M{"isactive": true}, options)
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +139,8 @@ func (r *MongoRepository) FindAll() ([]*PostData, error) {
 }
 
 func (r *MongoRepository) FindById(id string) (*PostData, error) {
-	return r.findOneByQuery(bson.M{"_id": id})
+	objectId, _ := primitive.ObjectIDFromHex(id)
+	return r.findOneByQuery(bson.M{"_id": objectId})
 }
 
 func (r *MongoRepository) findOneByQuery(query interface{}) (*PostData, error) {

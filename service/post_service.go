@@ -25,7 +25,7 @@ type PostService interface {
 	FindAll() ([]*PostDto, error)
 	FindById(id string) (*PostDto, error)
 	FindByPagination(page int64, pageSize int64) ([]*PostDto, error)
-	FindByCategoryPagination(categoryid string, page int, pageSize int) []*PostDto
+	FindByCategoryPagination(categoryid int, page int, pageSize int) []*PostDto
 	Add(PostDto string) (bool, error)
 }
 
@@ -42,7 +42,7 @@ func FindById(id string) PostDto {
 	return mapSingleDataToDto(*data)
 }
 
-func FindByCategoryPagination(categoryid string, page int64, pageSize int64) []PostDto {
+func FindByCategoryPagination(categoryid int64, page int64, pageSize int64) []PostDto {
 	repo, err := createNewRepo()
 	if err != nil {
 		log.Fatal(err)
