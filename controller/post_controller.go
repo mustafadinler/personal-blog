@@ -71,7 +71,7 @@ func GetPosts(c *gin.Context) {
 }
 
 func GetPostsByCategoryId(c *gin.Context) {
-	id := c.Param("categoryid")
+	id, _ := strconv.ParseInt(c.Param("categoryid"), 10, 64)
 
 	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
 	if page <= 0 {
