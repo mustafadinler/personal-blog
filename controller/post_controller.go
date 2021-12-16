@@ -18,6 +18,15 @@ type Post struct {
 	CategoryId int       `json:"CategoryID"`
 }
 
+// PostExample godoc
+// @Summary      post request example
+// @Description  post request example
+// @Accept       json
+// @Produce      plain
+// @Param        message  body      bool  true  "Account Info"
+// @Success      200      {string}  string         "success"
+// @Failure      500      {string}  string         "fail"
+// @Router       /posts [post]
 func CreatePost(c *gin.Context) {
 	var p Post
 	if err := c.ShouldBindJSON(&p); err != nil {

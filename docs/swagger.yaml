@@ -1,0 +1,28 @@
+info:
+  contact: {}
+paths:
+  /posts:
+    post:
+      consumes:
+      - application/json
+      description: post request example
+      parameters:
+      - description: Account Info
+        in: body
+        name: message
+        required: true
+        schema:
+          type: boolean
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: success
+          schema:
+            type: string
+        "500":
+          description: fail
+          schema:
+            type: string
+      summary: post request example
+swagger: "2.0"
